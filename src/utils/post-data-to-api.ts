@@ -6,6 +6,7 @@ export const postDataToAPI = async (data: any) => {
     const res = await axios.post(POST_API_URL, { data });
     console.log("POST", res);
   } catch (e) {
-    console.error("Error posting data");
+    console.error("Error posting data", e);
+    console.error(e.message);
   }
 };

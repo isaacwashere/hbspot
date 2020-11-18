@@ -10,15 +10,13 @@ export const handleTransformData = (data: any) => {
   console.log("Get most: ", getMostCommonAndEarliest);
   const buildFinalObj = buildFinal(getMostCommonAndEarliest);
   console.log("final", buildFinalObj);
-  return buildFinalObj.filter((d: any) => {
-    return d;
-  });
+  return buildFinalObj;
 };
 
 export const groupUsersByCountry = (data: any) => {
   const usersGroupedByCountry = data.reduce((acc: any, currVal: any) => {
     const foundCountry = acc.find((item: any) => {
-      return item.country === currVal.country.toLowerCase();
+      return item.country === currVal.country;
     });
 
     if (foundCountry) {
@@ -29,8 +27,8 @@ export const groupUsersByCountry = (data: any) => {
     return [
       ...acc,
       {
-        country: currVal.country.toLowerCase(),
-        attendees: [...(acc[currVal.country.toLowerCase()] || []), currVal],
+        country: currVal.country,
+        attendees: [...(acc[currVal.country] || []), currVal],
       },
     ];
   }, []);
@@ -79,12 +77,11 @@ export const getA = (getDateOccurrences: any[]) => {
       return d.occurrences === mostOccurring;
     });
 
-    if (valuableDate && valuableDate.length > 1)
-      return { ...countryInfo, earliest: valuableDate[0] };
+    if (valuableDate && valuableDate.length <= 1)
+      return { ...countryInfo, earliest: valuableDate[0].date };
 
     const datesAsMoment: Moment[] = valuableDate.map((t: any) => {
-      const d = new Date(t.date);
-      const final = moment(d);
+      const final = moment(t.date);
       return final;
     });
     const earliest = moment.min(datesAsMoment);
@@ -97,7 +94,7 @@ export const getA = (getDateOccurrences: any[]) => {
 
 export const buildFinal = (data: any) => {
   const final = data.reduce((acc: any, currVal: any) => {
-    const date = currVal.earliest.date;
+    const date = currVal.earliest;
     const attendees = currVal.attendees
       .filter((attendee: any) => {
         return includesDate(attendee, date);
